@@ -25,7 +25,7 @@ async function callApi(endpoint, data, retries = 0) {
   }
 
   try {
-    const response = await fetch('/api/prospeo', {
+    const response = await fetch(`/api/${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
