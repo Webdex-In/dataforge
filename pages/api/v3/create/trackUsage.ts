@@ -1,5 +1,4 @@
 import { db } from "../../../../config/db";
-import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {

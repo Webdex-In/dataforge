@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { db } from "/config/db"; // Adjust this import based on your directory structure
-import { getAuth } from '@clerk/nextjs/server'
+import { db } from "../../../../config/db";
 
 export default async function handler(
     req: NextApiRequest,

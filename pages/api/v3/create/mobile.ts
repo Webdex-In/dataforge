@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "/config/db"; // Adjust the import according to your db setup
+import { db } from "../../../../config/db";
 
 export default async function handler(
   req: NextApiRequest,
