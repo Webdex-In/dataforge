@@ -6,7 +6,7 @@ import { formatDomainUrl, formatUrl, trackUsage } from './supports';
 // Constants
 const API_BASE_URL = 'https://api.prospeo.io';
 const API_KEY = process.env.NEXT_PUBLIC_PROSPEO_API_KEY!;
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_V3!;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_V3;
 
 // In-memory cache
 const cache: Record<string, any> = {};

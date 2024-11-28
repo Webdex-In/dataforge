@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const BASEURL_V3 = process.env.NEXT_PUBLIC_BASE_URL_V3
+
 const CREDIT_COSTS = {
   linkedinProfile: 1,  
   validEmail: 2,      
@@ -37,7 +39,7 @@ export async  function trackUsage(userId,type, count = 1) {
 
   try {
     // Send a POST request to the API
-    const response = await axios.post('/api/v3/create/trackUsage', payload);
+    const response = await axios.post(`${BASEURL_V3}/api/v3/create/trackUsage`, payload);
   } catch (error) {
     console.error('Error tracking usage:', error);
   }
@@ -83,7 +85,7 @@ export async function getUsageData(startDate, endDate) {
 
   try {
     // Send a POST request to the API
-    const response = await axios.post('/api/v1/get/getUsage');
+    const response = await axios.post(`${BASEURL_V3}/api/v1/get/getUsage`);
 
       // const usage = JSON.parse(localStorage.getItem('usage') || '{}');
   const usage = response.data
@@ -157,7 +159,7 @@ export async function trackBulkEnrichment(fileCount, entryCount) {
 
   try {
     // Send a POST request to the API
-    const response = await axios.post('/api/v1/create/trackUsage', payload);
+    const response = await axios.post(`${BASEURL_V3}/api/v1/create/trackUsage`, payload);
   } catch (error) {
     console.error('Error tracking usage:', error);
   }
