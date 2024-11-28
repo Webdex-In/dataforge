@@ -3,8 +3,6 @@ import axios from 'axios';
 import { trackUsage } from './creditSystem';
 import { formatDomainUrl, formatUrl } from './supports';
 
-const API_BASE_URL = 'https://api.prospeo.io';
-const API_KEY = process.env.NEXT_PUBLIC_PROSPEO_API_KEY;
 const MAX_RETRIES = 2;
 const RETRY_DELAY = 1000; // 1 second
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
