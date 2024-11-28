@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add any global styles here */
+
+
+.cl-internal-4x6jej > :not(:first-of-type)  , .cl-internal-piyvrh ,.cl-internal-df7v37{
+    display: none;
+}
+
+
+.cl-footer .cl-internal-16vtwdp ,.cl-userButtonPopoverFooter{
+    display: none;
+}

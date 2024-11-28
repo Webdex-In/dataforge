@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  userId          String   @unique @default(uuid())
+  ApiKey          String?  @unique
+  username        String
+  firstName       String
+  lastName        String
+  imageUrl        String
+  email           String   @unique
+  isEmailVerified Boolean  @default(false)
+  provider        String
+  phoneNumber     Int
+  isPhoneVerified Boolean  @default(false)
+  freeCredit      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  totalCredit     Int      @default(0)
+  usages          Usage?
+  orders          Order[]
+}
+
+model Order {
+  id        String  @id @default(uuid())
+  paymentId String  @unique
+  planeName String?
+  credits   String?
+  price     String?
+  userId    String
+  user      User    @relation(fields: [userId], references: [userId])
+  productId String
+  priceId   String
+  quantity  Int
+  mode      String
+  status    String
+  currency  String
+  sessionId String  @unique
+  metadata  Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CreditUsage {
+  id               Int     @id @default(autoincrement())
+  userId           String
+  date             String  @unique
+  dataType         String?
+  linkedinProfiles Int?    @default(0)
+  validEmails      Int?    @default(0)
+  phoneNumbers     Int?    @default(0)
+  totalUseCredits  Int?    @default(0)
+  entries          Int?    @default(0)
+  files            Int?    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([date, userId])
+}
+
+model Usage {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  date              DateTime
+  linkedinProfiles  Int      @default(0)
+  validEmails       Int      @default(0)
+  unverifiedEmails  Int      @default(0)
+  bulkCompanyEmails Int      @default(0)
+  phoneNumbers      Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Email {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  userId      String?
+  emailAnonId String?  @unique
+  domainUrl   String?  @unique
+  emailStatus String?
+  firstName   String?
+  lastName    String?
+  email_type  String?
+  socialId    String?  @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  domainId    String?
+  social      Social?  @relation(fields: [socialId], references: [id], onDelete: Cascade)
+  domain      Domain?  @relation(fields: [domainId], references: [id], onDelete: Cascade)
+}
+
+model Mobile {
+  id                   String   @id @default(uuid())
+  socialUrl            String?
+  raw_format           String
+  international_format String
+  national_format      String
+  prefix               String
+  country_name         String
+  country_code         String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  socialId String? @unique
+  social   Social? @relation(fields: [socialId], references: [id], onDelete: Cascade)
+}
+
+model Social {
+  id                String  @id @default(uuid())
+  userEnterUrl      String?
+  userId            String?
+  first_name        String?
+  last_name         String?
+  full_name         String?
+  gender            String?
+  job_title         String?
+  provider          String?
+  social_url        String  @unique
+  summary           String? @db.Text
+  premium           String? @db.Text
+  skills            String? @db.Text
+  current_job_year  String?
+  current_job_month String?
+  picture           String?
+  //company Details
+
+  company_name                 String?
+  company_size                 String?
+  company_logo                 String? @db.Text
+  company_linkedin             String? @db.Text
+  company_website              String? @db.Text
+  company_common_email_pattern String? @db.Text
+  company_industry             String?
+  company_founded_in           String?
+  company_description          String? @db.Text
+  company_country              String?
+  company_country_code         String?
+  company_state                String?
+  company_city                 String?
+  company_timezone             String?
+  company_timezone_offset      String?
+  company_postal_code          String?
+  company_address              String?
+
+  //Location
+  country         String?
+  country_code    String?
+  state           String?
+  city            String?
+  timezone        String?
+  timezone_offset String?
+  postal_code     String?
+  raw             String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Email one to one relationship
+  email  Email?
+  mobile Mobile?
+
+  // One-to-many relationship with work experience
+  workExperience WorkExperience[]
+  education      Education[]
+}
+
+model WorkExperience {
+  id            String  @id @default(uuid())
+  companyId     String?
+  companyName   String? @db.Text
+  companyLogo   String? @db.Text
+  companyUrl    String? @db.Text
+  employeeStart Int?
+  employeeEnd   Int?
+
+  // Date fields
+  startMonth Int?
+  startDay   Int?
+  startYear  Int?
+  endMonth   Int?
+  endDay     Int?
+  endYear    Int?
+
+  // Job-related fields
+  title          String
+  description    String? @db.Text
+  employmentType String
+  location       String?
+
+  // Foreign key
+  socialId String
+  social   Social @relation(fields: [socialId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Education {
+  id           String  @id @default(uuid())
+  schoolName   String?
+  schoolLogo   String? @db.Text
+  schoolUrl    String? @db.Text
+  degreeName   String? @db.Text
+  fieldOfStudy String? @db.Text
+  startYear    Int?
+  endYear      Int?
+
+  // Foreign key
+  socialId String
+  social   Social @relation(fields: [socialId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Domain {
+  id                String             @id @default(uuid())
+  domain            String             @unique
+  userId            String?
+  total_emails      Int
+  remaining_emails  Int
+  search_id         String
+  more_results      Boolean
+  limit             Int
+  companyEnrichment CompanyEnrichment?
+  emails            Email[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model CompanyEnrichment {
+  id                   String    @id @default(uuid())
+  name                 String?
+  is_catch_all         Boolean?
+  size                 String?
+  logo                 String?
+  linkedin             String?
+  website              String?
+  common_email_pattern String?   @db.Text
+  industry             String?
+  founded_in           Int?
+  description          String?   @db.Text
+  anon_id              String? // Company anonymized ID
+  location             Location? @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  locationId           String?
+
+  // Relationship to Domain
+  domain    Domain?  @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  domainId  String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Location {
+  id              String   @id @default(uuid())
+  country         String?
+  country_code    String?
+  state           String?
+  city            String?
+  timezone        String?
+  timezone_offset String?
+  postal_code     String?
+  address         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  companyEnrichment CompanyEnrichment[]
+}
